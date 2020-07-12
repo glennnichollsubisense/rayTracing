@@ -27,10 +27,11 @@ if __name__== "__main__":
         translation = json.loads(sys.argv[3])
 
         rtPt = rtp.rtPoint(pt[0], pt[1], pt[2])
-
         testTranslation = mtf.newTranslation (translation[0], translation[1], translation[2])
-        print json.dumps(testTranslation.transform(rtPt.transpose()).transpose().matrix['data'])
 
+        print json.dumps(rtPt.translate(testTranslation).getMatrixData())
+
+        
     if sys.argv[1] == 'testInverseTranslate':
 
         pt = json.loads(sys.argv[2])
@@ -39,7 +40,7 @@ if __name__== "__main__":
         rtPt = rtp.rtPoint(pt[0], pt[1], pt[2])
         testTranslation = mtf.newTranslation (translation[0], translation[1], translation[2])
 
-        print json.dumps(testTranslation.inverse().transform(rtPt.transpose()).transpose().matrix['data'])
+        print json.dumps(rtPt.translate(testTranslation.inverse()).getMatrixData())
 
         
     if sys.argv[1] == 'testTranslateVector':
@@ -51,7 +52,7 @@ if __name__== "__main__":
 
         testTranslation = mtf.newTranslation (translation[0], translation[1], translation[2])
 
-        print json.dumps(testTranslation.transform(rtVec.transpose()).transpose().matrix['data'])
+        print json.dumps(rtVec.generalTransform(testTranslation).getMatrixData())
 
     if sys.argv[1] == 'testScalePoint':
 
@@ -62,7 +63,7 @@ if __name__== "__main__":
 
         testScaling = mtf.newScaling (scaling[0], scaling[1], scaling[2])
 
-        print json.dumps(testScaling.transform(rtPt.transpose()).transpose().matrix['data'])
+        print json.dumps(rtPt.scale(testScaling).getMatrixData())
 
     if sys.argv[1] == 'testScaleVector':
 
@@ -73,7 +74,7 @@ if __name__== "__main__":
 
         testScaling = mtf.newScaling (scaling[0], scaling[1], scaling[2])
 
-        print json.dumps(testScaling.transform(rtVec.transpose()).transpose().matrix['data'])
+        print json.dumps(rtVec.generalTransform(testScaling).getMatrixData())
 
     if sys.argv[1] == 'testInverseScaleVector':
 
@@ -84,7 +85,7 @@ if __name__== "__main__":
 
         testScaling = mtf.newScaling (scaling[0], scaling[1], scaling[2]).inverse()
 
-        print json.dumps(testScaling.transform(rtVec.transpose()).transpose().matrix['data'])
+        print json.dumps(rtVec.generalTransform(testScaling).getMatrixData())
 
 
     if sys.argv[1] == 'testNegativeScalePoint':
@@ -96,7 +97,7 @@ if __name__== "__main__":
 
         testScaling = mtf.newScaling (scaling[0], scaling[1], scaling[2])
 
-        print json.dumps(testScaling.transform(rtPt.transpose()).transpose().matrix['data'])
+        print json.dumps(rtPt.generalTransform(testScaling).getMatrixData())
 
     if sys.argv[1] == 'testRotatePoint':
 
@@ -122,7 +123,8 @@ if __name__== "__main__":
             if axis == 'Z':
                 testRotation = mtf.newRotation ('Z', math.pi/4.0)
 
-        print json.dumps(testRotation.transform(rtPt.transpose()).transpose().matrix['data'])
+        afterRotation = rtPt.rotate(testRotation)
+        print json.dumps(rtPt.rotate(testRotation).getMatrixData())
 
 
     if sys.argv[1] == 'testShearPoint':
@@ -133,7 +135,7 @@ if __name__== "__main__":
         rtPt = rtp.rtPoint(pt[0], pt[1], pt[2])
         testShear = mtf.newShearing (shearComponents)
 
-        print json.dumps(testShear.transform(rtPt.transpose()).transpose().matrix['data'])
+        print json.dumps(rtPt.shear(testShear).getMatrixData())
 
 
 
@@ -146,7 +148,7 @@ if __name__== "__main__":
         tr2 = mtf.newScaling(5,5,5)
         tr3 = mtf.newTranslation (10, 5, 7)
         chainedTransform = tr3.transform(tr2).transform(tr1)
-        print json.dumps(chainedTransform.transform(rtPt.transpose()).transpose().matrix['data'])
+        print json.dumps(rtPt.generalTransform(chainedTransform).getMatrixData())
         
     
     if sys.argv[1] == 'testChainedRunTwice':
@@ -159,8 +161,8 @@ if __name__== "__main__":
         tr3 = mtf.newTranslation (10, 5, 7)
         chainedTransform = tr3.transform(tr2).transform(tr1)
         chainedTransform = tr3.transform(tr2).transform(tr1)
-        print json.dumps(chainedTransform.transform(rtPt.transpose()).transpose().matrix['data'])
-        
+        print json.dumps(rtPt.generalTransform(chainedTransform).getMatrixData())
+       
     
 
     

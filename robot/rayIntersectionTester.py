@@ -4,7 +4,9 @@ import json
 
 import rtSphere
 from  rtRay import rtRay
+from  rtVector import rtVector
 import rtIntersection
+import rtSphere
 import matrixTransformationFactory
 
 
@@ -165,7 +167,7 @@ if __name__== "__main__":
 
         pt = json.loads(sys.argv[2])
         vector = json.loads(sys.argv[3])
-        transParams = json.loads(sys.argv[3])
+        transParams = json.loads(sys.argv[4])
         tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
         translation = tfac.newTranslation (transParams[0],\
                                            transParams[1],\
@@ -174,12 +176,165 @@ if __name__== "__main__":
         ray = rtRay()
         ray.setFromArrays(pt, vector)
 
-        ray.showMe()
         newRay = ray.translate(translation)
 
-        print ('^^^ %s' % str(newRay))
-        newRay.showMe()
+        res = {'ray': {}}
+        res['ray']['origin'] = newRay.origin().getMatrixData()[0]
+        res['ray']['direction'] = newRay.direction().getMatrixData()[0]
+        print (json.dumps (res))
+        
+    if sys.argv[1] == 'testRayScaling':
+
+        pt = json.loads(sys.argv[2])
+        vector = json.loads(sys.argv[3])
+        scalingParams = json.loads(sys.argv[4])
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+        scaling = tfac.newScaling (scalingParams[0],\
+                                           scalingParams[1],\
+                                           scalingParams[2])
+        
+        ray = rtRay()
+        ray.setFromArrays(pt, vector)
+
+        newRay = ray.scale(scaling)
+
+        res = {'ray': {}}
+        res['ray']['origin'] = newRay.origin().getMatrixData()[0]
+        res['ray']['direction'] = newRay.direction().getMatrixData()[0]
+        print (json.dumps (res))
+        
+    if sys.argv[1] == 'testUnitSphereTransform':
+
+        sphere = rtSphere.rtSphere()
+        
+        res = {'isIdentity': False}
+        res['isIdentity'] = sphere.transform().isIdentity()
+        print (json.dumps (res))
+        
+    if sys.argv[1] == 'testTransformedSphere':
+
+        transformParams = json.loads(sys.argv[2])
+        
+        sphere = rtSphere.rtSphere()
+
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+        translation = tfac.newTranslation (transformParams[0],\
+                                           transformParams[1],\
+                                           transformParams[2])
+        
+        sphere.applyTransform(translation)
+
+        print (json.dumps (sphere.transform().asJSON()))
+        
+    if sys.argv[1] == 'testIntersectionsWithScaledSphere':
+
+        rayOrigin     = json.loads(sys.argv[2])
+        rayDirection  = json.loads(sys.argv[3])
+        sphereScaling = json.loads(sys.argv[4])
+
+        ray = rtRay()
+        ray.setFromArrays(rayOrigin, rayDirection)
+        sphere = rtSphere.rtSphere()
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+        scaling = tfac.newScaling (sphereScaling[0],\
+                                           sphereScaling[1],\
+                                           sphereScaling[2])
+        
+        sphere.applyTransform (scaling)
+
+        intersections = ray.intersectionsWithSphere (sphere)
+        
+        print (json.dumps (intersections))
+        
+    if sys.argv[1] == 'testIntersectionsWithTranslatedSphere':
+
+        rayOrigin     = json.loads(sys.argv[2])
+        rayDirection  = json.loads(sys.argv[3])
+        sphereTranslation = json.loads(sys.argv[4])
+
+        ray = rtRay()
+        ray.setFromArrays(rayOrigin, rayDirection)
+        sphere = rtSphere.rtSphere()
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+        scaling = tfac.newTranslation (sphereTranslation[0],\
+                                           sphereTranslation[1],\
+                                           sphereTranslation[2])
+        
+        sphere.applyTransform (scaling)
+
+        intersections = ray.intersectionsWithSphere (sphere)
+        
+        print (json.dumps (intersections))
+
+        
+    if sys.argv[1] == 'testNormals':
+
+        normalDirection  = json.loads(sys.argv[2])
+
+        sphere = rtSphere.rtSphere()
+        normal = sphere.normalAtObjectPoint(normalDirection[0], normalDirection[1], normalDirection[2])
+
         
 
-        print (json.dumps ([newRay.origin().matrix['data'], newRay.direction().matrix['data']]))
+        normalData = normal.getMatrixData()
+
+        print (json.dumps({'normal': [normalData[0][0], normalData[0][1], normalData[0][2]]}))
+
+        
+    if sys.argv[1] == 'testNormalsWithTranslation':
+
+        normalDirection  = json.loads(sys.argv[2])
+        translationData  = json.loads(sys.argv[3])
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+
+        sphere = rtSphere.rtSphere()
+
+        sphere.applyTransform(tfac.newTranslation(translationData[0], translationData[1], translationData[2]))
+
+        normal = sphere.normalAtWorldPoint(normalDirection[0], normalDirection[1], normalDirection[2])
+
+        normalData = normal.getMatrixData()
+
+        print (json.dumps({'normal': [normalData[0][0], normalData[0][1], normalData[0][2]]}))
+
+
+    if sys.argv[1] == 'testNormalsWithTransform':
+
+        normalDirection  = json.loads(sys.argv[2])
+        scalingData  = json.loads(sys.argv[3])
+        rotationData  = json.loads(sys.argv[4])
+        tfac = matrixTransformationFactory.rtMatrixTransformationFactory()
+
+        scaling = tfac.newScaling(scalingData[0], scalingData[1], scalingData[2])
+
+
+        rotation = tfac.newRotation('Z', rotationData[2])
+        
+        transform = scaling.multiplyWithAnother(rotation)
+
+        
+        sphere = rtSphere.rtSphere()
+        sphere.applyTransform(transform)
+        normal = sphere.normalAtWorldPoint(normalDirection[0], normalDirection[1], normalDirection[2])
+
+        
+        normalVector = normal.normalise()
+        normalData = normalVector.getMatrixData()
+        print (json.dumps({'normal': [normalData[0][0], normalData[0][1], normalData[0][2]]}))
+
+
+    if sys.argv[1] == 'testNormalIsNormalised':
+
+        normalDirection  = json.loads(sys.argv[2])
+
+        sphere = rtSphere.rtSphere()
+        normal = sphere.normalAtObjectPoint(normalDirection[0], normalDirection[1], normalDirection[2])
+
+        normalisedVector = normal.normalise()
+        areSame = "No"
+        if normal.equalToAnother(normalisedVector):
+            areSame = "Yes"
+
+        print (json.dumps({'isNormalised': areSame}))
+
         

@@ -47,7 +47,7 @@ class pointsVectorsTester():
         entityA = rtv.rtVector(matA[0], matA[1], matA[2])
         entityB = rtv.rtVector(matB[0], matB[1], matB[2])
 
-        return entityA.addWithAnother(entityB).matrix['data']
+        return entityA.addWithAnother(entityB).getMatrixData()
 
     def addPointToAVector(self, matA, matB):
 
@@ -58,7 +58,7 @@ class pointsVectorsTester():
         entityA = rtp.rtPoint(matA[0], matA[1], matA[2])
         entityB = rtv.rtVector(matB[0], matB[1], matB[2])
 
-        return entityA.addWithAnother(entityB).matrix['data']
+        return entityA.addWithAnother(entityB).getMatrixData()
 
     def multiplyPointByScalar(self, matA, scalar):
 
@@ -81,7 +81,7 @@ class pointsVectorsTester():
         
         entityA = rtv.rtVector(matA[0], matA[1], matA[2])
 
-        return (entityA.multiplyByScalar(scalar).matrix['data'])
+        return (entityA.multiplyByScalar(scalar).getMatrixData())
 
     def dividePointByScalar(self, matA, scalar):
 
@@ -104,7 +104,7 @@ class pointsVectorsTester():
         
         entityA = rtv.rtVector(matA[0], matA[1], matA[2])
 
-        return (entityA.divideByScalar(scalar).matrix['data'])
+        return (entityA.divideByScalar(scalar).getMatrixData())
 
     def magnitudeOfPoint(self, matA):
 
@@ -151,7 +151,7 @@ class pointsVectorsTester():
         
         entityA = rtv.rtVector(matA[0], matA[1], matA[2])
 
-        return (entityA.normalise())
+        return (entityA.normalise().getMatrixData())
 
     def dotProductPoint(self, matA, matB):
 

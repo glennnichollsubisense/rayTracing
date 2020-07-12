@@ -27,8 +27,8 @@ if __name__== "__main__":
         ray = rtRay.rtRay(rtOrigin, rtDirection)
 
         res = {}
-        res['origin']= ray.origin().matrix['data'][0]
-        res['direction']= ray.direction().matrix['data'][0]
+        res['origin']= ray.origin().getMatrixData()[0]
+        res['direction']= ray.direction().getMatrixData()[0]
 
         print json.dumps(res)
 
@@ -45,7 +45,7 @@ if __name__== "__main__":
 
         res = {}
         newPosition= ray.position (t)
-        res['tpoint'] = newPosition.matrix['data'][0]
+        res['tpoint'] = newPosition.getMatrixData()[0]
 
 #        print ('res = %s' % str(res) )
         print json.dumps(res)

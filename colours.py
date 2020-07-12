@@ -1,55 +1,58 @@
 
-def newColour(r, g, b):
-    return (r, g, b)
+class rtColour(object):
 
-def newBlack():
-    return (0.0, 0.0, 0.0)
+    def __init__(self, red=0.0, green=0.0, blue=0.0, name='No Name'):
 
-def newWhite():
-    return (1.0, 1.0, 1.0)
-
-def newRed():
-    return (1.0, 0.0, 0.0)
-
-def newGreen():
-    return (0.0, 1.0, 0.0)
-
-def newBlue():
-    return (0.0, 0.0, 1.0)
-
-def newYellow():
-    return (1.0, 1.0, 0.0)
-
-def newCyan():
-    return (0.0, 1.0, 1.0)
-
-def newMagenta():
-    return (1.0, 0.0, 1.0)
+        self.sName = name
+        self.sRGB = (red, green, blue)
 
 
-def addAB(a, b):
-    return (
-             a[0] + b[0], \
-             a[1] + b[1], \
-             a[2] + b[2], \
-           )
+    def getName(self):
 
-def subtractBFromA (a, b):
-
-    return (a[0] - b[0], \
-            a[1] - b[1], \
-            a[2] - b[2]
-           )
-
-def multiplyColourByScalar (vec, scalar):
-
-    return (vec[0] * scalar, \
-            vec[1] * scalar, \
-            vec[2] * scalar
-           )
+        return self.sName
 
 
+    def getRGB(self):
 
+        return self.sRGB
+
+
+    def addB(self, b):
+        bRGB = b.getRGB()
+        return rtColour(
+            self.sRGB[0] + bRGB[0], \
+            self.sRGB[1] + bRGB[1], \
+            self.sRGB[2] + bRGB[2], \
+        )
+
+    def subtractFromMe (self, b):
+        
+        return rtColour(self.sRGB[0] - b[0], \
+                self.sRGB[1] - b[1], \
+                self.sRGB[2] - b[2]
+        )
+    
+    def multiplyByScalar (self, scalar):
+
+        return rtColour(self.sRGB[0] * scalar, \
+                self.sRGB[1] * scalar, \
+                self.sRGB[2] * scalar
+        )
+    
+    
+    def multiplyByAnother (self, another):
+
+        anotherRGB = another.getRGB()
+        return rtColour(self.sRGB[0] * anotherRGB[0],
+                        self.sRGB[1] * anotherRGB[1],
+                        self.sRGB[2] * anotherRGB[2])
+
+
+
+    def showMe(self, title=''):
+        print ('Colour *** %s ** %s ** %s ' % (title, self.sName, str(self.sRGB)))
+
+               
 if __name__== "__main__":
 
     ##  Testing scripts
@@ -58,5 +61,6 @@ if __name__== "__main__":
     print (addAB(newGreen(), newBlue()))
     print (addAB(newYellow(), newBlue()))
     print (subtractBFromA(newYellow(), newBlue()))
-    print multiplyColourByScalar (newYellow(), 3.1)
+    print (multiplyColourByScalar (newYellow(), 3.1))
+    print (multiplyColourByAnother (newYellow(), newGreen()))
     

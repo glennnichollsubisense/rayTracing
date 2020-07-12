@@ -8,6 +8,11 @@ class rtMatrixTransformationFactory():
         self.message = 'rtMatrixFactory'
         
 
+
+    def newIdentity (self):
+        mt = rtMatrix (4, 4, True)
+        return mt
+    
     def newTranslation (self, x, y, z):
 
         mt = rtMatrix(4, 4, True)
@@ -72,6 +77,3 @@ class rtMatrixTransformationFactory():
 
         return mt
         
-        
-
-    

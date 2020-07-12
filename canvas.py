@@ -1,5 +1,5 @@
 import colours as cl
-
+from rtColourFactory import rtColourFactory
 
 class outOfCanvasBounds(Exception):
 
@@ -23,28 +23,28 @@ class Canvas():
         return self.canvas['height']
     
     def makeBlackCanvas(self):
+
+        rtf = rtColourFactory()
         for iheight in range (0, self.canvas['height']):
-            self.canvas['data'][iheight] = [cl.newBlack()] * self.canvas['width']
+            self.canvas['data'][iheight] = [rtf.newBlack().getRGB()] * self.canvas['width']
 
         return self.canvas
 
     def makeWhiteCanvas(self):
  
         for iheight in range (0, self.canvas['height']):
-            self.canvas['data'][iheight] = [cl.newWhite()] * self.canvas['width']
+            self.canvas['data'][iheight] = [rtf.newWhite().getRGB()] * self.canvas['width']
 
         return self.canvas
 
     def setPixel (self, x, y, colour):
-
-        print ('setting pixel at %i - %i ' % (x, y))
 
         if (x<0) or (x>=self.canvas['width']):
             raise (outOfCanvasBounds('out of bounds'))
         if (y<0) or (y>=self.canvas['height']):
             raise (outOfCanvasBounds('out of bounds'))
         
-        self.canvas['data'][y][x] = colour
+        self.canvas['data'][y][x] = colour.getRGB()
         
     def getPixel (self, x, y):
 
@@ -106,10 +106,11 @@ if __name__== "__main__":
 
     print (' ^^^ Testing the canvas') 
 
+    rtf = rtColourFactory()
     cc = Canvas(7, 3)
     cc.makeBlackCanvas()
     cc.showMe()
-    cc.setPixel(6, 0, cl.newRed())
+    cc.setPixel(6, 0, rtf.newRed())
     cc.showMe()
 
     print (str(cc.getPixel(6, 0)))
@@ -117,9 +118,9 @@ if __name__== "__main__":
     cc = Canvas(64, 40)
     cc.makeBlackCanvas()
     for i in range (0, 40):
-        cc.setPixel (31, i, cl.newYellow() )
-        cc.setPixel (37, i, cl.newGreen() )
-        cc.setPixel (41, i, cl.newYellow() )
-        cc.setPixel (43, i, cl.newRed() )
+        cc.setPixel (31, i, rtf.newYellow() )
+        cc.setPixel (37, i, rtf.newGreen() )
+        cc.setPixel (41, i, rtf.newYellow() )
+        cc.setPixel (43, i, rtf.newRed() )
     
     cc.saveAs ('/home/pi/Projects/rayTracing/outputs/testCanvas.ppm')

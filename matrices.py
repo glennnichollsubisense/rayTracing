@@ -52,6 +52,18 @@ class rtMatrix(object):
     
     def height(self):
         return self.matrix['height']
+
+
+    def asJSON(self):
+
+        res = {'matrix': []}
+        for iheight in range (0, self.height()):
+            tArray = []
+            for iwidth in range (0, self.width()):
+                tArray.append(self.getValue(iheight, iwidth))
+            res['matrix'].append(tArray)
+
+        return res
     
     def fpAEqualsB (self, a, b):
 
@@ -126,7 +138,7 @@ class rtMatrix(object):
         resMatrix = rtMatrix(self.height(), self.width())
         for iheight in range (0, self.height()):
             for iwidth in range (0, self.width()):
-                tDiff = self.getValue(iheight, iwidth) - another(iheight, iwidth)
+                tDiff = self.getValue(iheight, iwidth) - another.getValue(iheight, iwidth)
                 resMatrix.setValue(iheight, iwidth, tDiff)
         return resMatrix
         
@@ -293,13 +305,10 @@ class rtMatrix(object):
         
 
         
-    def showMe(self, short=False, title=''):
+    def showMe(self, title=''):
 
         print ('%s --- Matrix %i x %i ' % (title, self.height(), self.width()))
         
-        if short == True:
-            return 
-
         for iheight in range (0, self.height()):
 
             rowStr = ''            

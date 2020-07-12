@@ -59,6 +59,10 @@ class rtIntersectionSet(object):
     def addIntersection(self, pIntersection):
         self.sIntersections.append(pIntersection)
 
+    def clearIntersections(self):
+        self.sIntersections=[]
+
+        
     def showMe(self):
         print ('rtIntersectionSet: %s ' % str(self.noOfIntersections()))
 
@@ -71,6 +75,6 @@ class rtIntersectionSet(object):
                 interTValue = int(iInter.tValue())
                 interID = iInter.intersectionID()
 
-        return {'hit': interID}
+        return {'hit': interID, 'tvalue': interTValue}
 
     

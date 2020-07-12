@@ -2,7 +2,6 @@ from math import sqrt
 import matrices as mx
 
 
-
 class PointAndVector(mx.rtMatrix):
 
     def __init__(self, pointOrVector):

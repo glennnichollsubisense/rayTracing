@@ -4,7 +4,7 @@
 | Library | json
 
 *** Test Cases ***
-| Make a point and check its a point
+| Make a point and check it is a point
 | | ${result}= | run process | python | ./pointsAndVectorsTester.py | testIsPoint | [1, 2, 3]
 | | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
 | | Should be equal as strings | ${json} | True

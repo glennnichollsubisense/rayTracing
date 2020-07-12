@@ -1,7 +1,8 @@
 from math import sqrt
 import matrices as mx
+from rtVector import rtVector
 
-class rtPoint(mx.rtMatrix):
+class rtPoint(object):
 
     def __init__(self, x=0, y=0, z=0):
 
@@ -10,26 +11,47 @@ class rtPoint(mx.rtMatrix):
         self.unitConstant = 1.0
         self.zeroConstant = 0.0
 
-        super(rtPoint, self).__init__(1, 4)
-        self.setRow(0, [x, y, z, self.pointConstant])
+        self.matrix = mx.rtMatrix(1, 4)
+        self.matrix.setRow(0, [x, y, z, self.pointConstant])
 
         
     def isAPoint(self):
         return True
     
     def isAVector(self):
+
+        # GNGN put this onto the superclass
         return False
     
+
+    def getMatrixData(self):
+        return self.matrix.matrix['data']
+
+    def setFromMatrix(self, another):
+
+        self.matrix.setRow (0, [another[0], another[1], another[2], self.pointConstant])
+
+        
+    def setFromAnother(self, another):
+
+        self.matrix.setRow (0, [another.matrix.getValue(0, 0), another.matrix.getValue(0, 1), another.matrix.getValue(0, 2), self.pointConstant])
+
+        
     def addWithAnother(self, another):
     
         if another.isAPoint():
             raise (badAddition('Cannot add two points'))
 
-        return super(rtPoint, self).addWithAnother(another)
-
+        newPoint = rtPoint()
+        newPoint.matrix = self.matrix.addWithAnother(another.matrix)
+        return newPoint
+    
     
     def subtractAnotherFromMe (self, another):
-        return super(rtPoint, self).subtractFromMe(another)
+
+        newVector = rtVector()
+        newVector.matrix = self.matrix.subtractFromMe(another.matrix)
+        return newVector
     
     def multiplyByScalar (self, scalar):    
         raise badScalarMultiplication ('cannot multiply a point by a scalar')
@@ -54,7 +76,30 @@ class rtPoint(mx.rtMatrix):
     def crossProductWithAnother (self, another):    
         raise badCrossProduct ('cross product doesnt work on points')
 
+
+    def generalTransform (self, mtTransform):
+        newPoint = rtPoint()
+        newPoint.matrix = mtTransform.transform (self.matrix.transpose())
+        newPoint.matrix = newPoint.matrix.transpose()
+        return newPoint
+
+    def translate (self, mtTranslation):
+        return self.generalTransform(mtTranslation)
+
+    def shear (self, mtShear):
+        return self.generalTransform(mtShear)
+
+    def rotate (self, mtRotate):
+        return self.generalTransform(mtRotate)
+
+    def scale (self, mtScaling):
+        return self.generalTransform(mtScaling)
+
     
+    def showMe(self, txtPrefix=''):
+        print ('%s *** Point ***' % txtPrefix)
+        self.matrix.showMe()
+        
 ## Exceptions
     
 class badAddition(Exception):    

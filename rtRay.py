@@ -23,15 +23,15 @@ class rtRay(object):
     def position(self, pT):
 
         # compute the length of the vector
-        x = self.direction().getValue(0, 0)
-        y = self.direction().getValue(0, 1)
-        z = self.direction().getValue(0, 2)
+        x = self.direction().matrix.getValue(0, 0)
+        y = self.direction().matrix.getValue(0, 1)
+        z = self.direction().matrix.getValue(0, 2)
 
         length= math.sqrt((x*x) + (y*y) + (z*z))
 
-        newX = ((x * pT) / length ) + self.origin().getValue(0, 0)
-        newY = ((y * pT) / length ) + self.origin().getValue(0, 1)
-        newZ = ((z * pT) / length ) + self.origin().getValue(0, 2)
+        newX = ((x * pT) / length ) + self.origin().matrix.getValue(0, 0)
+        newY = ((y * pT) / length ) + self.origin().matrix.getValue(0, 1)
+        newZ = ((z * pT) / length ) + self.origin().matrix.getValue(0, 2)
 
         resPt = rtPoint.rtPoint(newX, newY, newZ)
         return resPt
@@ -39,13 +39,20 @@ class rtRay(object):
 
     def intersectionsWithSphere (self, pSphere):
 
-        a = self.sDirection.dotProductWithAnother(self.sDirection)
+        # to get the intersections with a transformed sphere, first transform
+        # myself with the inverse of the sphere's transform
+        inverseSphereTransform = pSphere.inverseTransform()
 
-        sphereToRay= rtVector.rtVector(self.sOrigin.getValue(0, 0) - pSphere.origin().getValue(0, 0), \
-                                       self.sOrigin.getValue(0, 1) - pSphere.origin().getValue(0, 1), \
-                                       self.sOrigin.getValue(0, 2) - pSphere.origin().getValue(0, 2), \
+        adjustedRay = self.generalTransform(inverseSphereTransform)
+        
+        
+        a = adjustedRay.sDirection.dotProductWithAnother(adjustedRay.sDirection)
+
+        sphereToRay= rtVector.rtVector(adjustedRay.sOrigin.matrix.getValue(0, 0), \
+                                       adjustedRay.sOrigin.matrix.getValue(0, 1), \
+                                       adjustedRay.sOrigin.matrix.getValue(0, 2), \
                                       )
-        b = 2 * (self.sDirection.dotProductWithAnother(sphereToRay))
+        b = 2 * (adjustedRay.sDirection.dotProductWithAnother(sphereToRay))
         c = sphereToRay.dotProductWithAnother(sphereToRay) - 1
 
         discriminant = (b*b) - (4 * a * c)
@@ -60,24 +67,26 @@ class rtRay(object):
 
         return (t1, t2)
 
+
+    def generalTransform (self, transform):
+        newOrigin = self.sOrigin.generalTransform(transform)        
+        newDirection = self.sDirection.generalTransform(transform)
+        return rtRay(newOrigin, newDirection)
+    
     def translate(self, translation):
         
-        coords = self.sOrigin.multiplyWithAnother(translation)
-        newOrigin = rtPoint.rtPoint()
-        print ('^^^^ coords = %s' % str(coords))
-        newOrigin.setFromMatrix(coords)
-        newOrigin.showMe(False, 'newOrigin of ray')
-        
-        newVector = rtVector.rtVector(self.sDirection)
-        tRay = rtRay(newOrigin.matrix['data'], newVector.matrix['data'])
-        return tRay
+        newOrigin = self.sOrigin.translate(translation)        
+        newDirection = self.sDirection
+        return rtRay(newOrigin, newDirection)
+    
+    def scale(self, scaling):
+        return self.generalTransform(scaling)
 
-        
     
 
     def showMe(self):
         print ('*** Ray ***')
-#        print ('origin %s' % str(self.sOrigin.matrix['data']))
-#        print ('direction %s' % str(self.sDirection.matrix['data']))
-        print ('origin %s' % str(self.sOrigin))
-        print ('direction %s' % str(self.sDirection))
+        print ('origin')
+        self.sOrigin.showMe()
+        print ('direction')
+        self.sDirection.showMe()
