@@ -36,16 +36,22 @@ class rtLighting(object):
         
         if lightDotNormal >= 0.0:
 
-            diffuse = effectiveColour.multiplyByScalar(self.sMaterial.getDiffuse())
-            diffuse = diffuse.multiplyByScalar(lightDotNormal)
-            reflectVector = lightVector.negate().reflectWithAnother(self.sNormalVector)
-            reflectDotEye = reflectVector.dotProductWithAnother(self.sEyeVector)
-            if reflectDotEye <= 0:
-                specular = rtf.newBlack()
-            else:
-                factor = pow(reflectDotEye, self.sMaterial.getShininess())
-                specular = self.sLightPoint.getColour().multiplyByScalar(self.sMaterial.getSpecular())
-                specular = specular.multiplyByScalar(factor)
+
+            try:
+                diffuse = effectiveColour.multiplyByScalar(self.sMaterial.getDiffuse())
+                diffuse = diffuse.multiplyByScalar(lightDotNormal)
+                reflectVector = lightVector.negate().reflectWithAnother(self.sNormalVector)
+                reflectDotEye = reflectVector.dotProductWithAnother(self.sEyeVector)
+                if rtfeflectDotEye <= 0:
+                    specular = rtf.newBlack()
+                else:       
+                    factor = pow(reflectDotEye, self.sMaterial.getShininess())
+                    specular = self.sLightPoint.getColour().multiplyByScalar(self.sMaterial.getSpecular())
+                    specular = specular.multiplyByScalar(factor)
+            except Exception:
+                specular = rtf.newWhite()
+                # print ("Exception went off when figuring out the colour")
+                # print ('%s - %s' % (str(reflectDotEye), str(self.sMaterial.getShininess())))
 
         colour = ambient.addB(diffuse)
         colour = colour.addB(specular)

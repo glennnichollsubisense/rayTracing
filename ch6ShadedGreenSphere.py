@@ -1,3 +1,5 @@
+import os
+
 from matrixTransformationFactory import rtMatrixTransformationFactory
 from rtPoint import rtPoint
 from rtRay import rtRay
@@ -38,7 +40,7 @@ class sceneCreator(object):
 
         # light source is a point source of white light
         # above, behind and to the left of the eye
-        lightPoint = rtPoint(0, 0, -60)
+        lightPoint = rtPoint(-25, 25, -60)
         aLightSource = PointLightSource(None, lightPoint)
 
         # origin of the rays is where the eye is
@@ -117,8 +119,9 @@ class sceneCreator(object):
                         # print ('%s,%s out of bounds' % (str(ix), str(iy)))
                         pass
 
-                    
-        aCanvas.saveAs ('/home/pi/Projects/rayTracing-git/rayTracing/outputs/ch6ShadedGreenSphere.ppm')
+                 
+        fname = os.getcwd() + os.sep + 'outputs' + os.sep + 'ch6ShadedGreenSphere.ppm'   
+        aCanvas.saveAs (fname)
 
 if __name__== "__main__":
 

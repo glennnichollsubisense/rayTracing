@@ -61,7 +61,7 @@ class rtMaterial(object):
     def setTextBookGreen(self):
 
         rtf = rtColourFactory()
-        self.sColour = rtColour(1.0, 0.2, 1.0)
+        self.sColour = rtColour(0.1, 0.65, 0.1)
         self.sDiffuse = 0.9
         self.sAmbient = 0.1
         self.sSpecular = 0.9
