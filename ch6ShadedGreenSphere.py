@@ -114,7 +114,8 @@ class sceneCreator(object):
                     
                     tColour = cl.rtColour(pixelColour[0], pixelColour[1], pixelColour[2])
                     try:
-                        aCanvas.setPixel (ix + xOffset, iy + yOffset, tColour)
+                        # Adjust the y component to allow for the reversed coordinate system in the ppm file format
+                        aCanvas.setPixel (ix + xOffset, backPanelHeight - (iy + yOffset), tColour)
                     except cv.outOfCanvasBounds:
                         # print ('%s,%s out of bounds' % (str(ix), str(iy)))
                         pass
