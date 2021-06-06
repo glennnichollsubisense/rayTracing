@@ -24,7 +24,12 @@ class rtSphere(object):
         
         self.sTransform = rtMatrixTransformationFactory().newIdentity()
         self.sInverseTransform = self.sTransform.inverse()
-        
+
+        delta = 0.00001
+        if abs(pRadius - 1.0) > delta:
+            self.sTransform = rtMatrixTransformationFactory().newScaling( pRadius, pRadius, pRadius )
+            self.sInverseTransform = self.sTransform.inverse()
+            
 
     def origin(self):
         return self.sOrigin
@@ -91,3 +96,5 @@ class rtSphere(object):
         self.sOrigin.showMe()
         print ('radius %s' % str(self.sRadius))
         self.sTransform.showMe('Transform')
+        self.sMaterial.showMe('Material')
+        

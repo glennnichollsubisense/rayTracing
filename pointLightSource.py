@@ -29,5 +29,10 @@ class PointLightSource(object):
         
     def getPoint(self):
         return self.sPoint
-    
+
+    def showMe(self, name=None):
+        if name != None:
+            print ('*** %s *** ' % name)
+        self.getColour().showMe('light source colour')
+        self.getPoint().showMe('light source point')
     

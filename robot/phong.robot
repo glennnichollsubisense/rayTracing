@@ -63,7 +63,7 @@
 | | Should be equal as numbers | ${blue} | 0
 
 | Make a material and check the components 
-| | ${result}= | run process | python | ./phongTester.py | testMaterial | [1, 1, 1] | 0.1 | 0.5 | 0.9 | 200.0
+| | ${result}= | run process | python | ./phongTester.py | testMaterial | [1, 1, 1] | 0.1 | 0.9 | 0.9 | 200.0
 | | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
 | | ${colour}= | Get From Dictionary | ${json} | colour
 | | ${red}= | Get From List | ${colour} | 0
@@ -80,7 +80,7 @@
 | | ${specular}= | Get From Dictionary | ${json} | specular
 | | Should be equal as numbers | ${specular} | 0.9
 | | ${diffuse}= | Get From Dictionary | ${json} | diffuse
-| | Should be equal as numbers | ${diffuse} | 0.5
+| | Should be equal as numbers | ${diffuse} | 0.9
 | | ${shininess}= | Get From Dictionary | ${json} | shininess
 | | Should be equal as numbers | ${shininess} | 200.0
 

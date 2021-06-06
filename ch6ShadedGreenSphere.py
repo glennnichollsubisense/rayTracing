@@ -26,21 +26,20 @@ class sceneCreator(object):
         backPanelWidth = 200
         backPanelHeight = 200        
         aCanvas = cv.Canvas(backPanelWidth, backPanelHeight)
-#        aCanvas.showMe(True)
         aCanvas.makeBlackCanvas()
         
         # make the object to be shown - a green sphere
         aSphere = rtSphere()
-        aSphere.getMaterial().setTextBookGreen()
+        aSphere.getMaterial().setTextBookPurple()
 
         # scale it but keep it on the origin
         tfac = rtMatrixTransformationFactory()
         aScaling = tfac.newScaling(50, 50, 50)
         aSphere.applyTransform(aScaling)
-
+        
         # light source is a point source of white light
         # above, behind and to the left of the eye
-        lightPoint = rtPoint(-25, 25, -60)
+        lightPoint = rtPoint(-10, -10, -10)
         aLightSource = PointLightSource(None, lightPoint)
 
         # origin of the rays is where the eye is
@@ -65,7 +64,7 @@ class sceneCreator(object):
 
                 interSet.clearIntersections()
 
-                if ix==iy:
+                if ix==iy and (ix % 10 == 0):
                     print ('%s-%s' % (str(ix), str(iy)))
                 
                 rayVector = rtVector (ix - rayOrigin.getMatrixData()[0][0], \
@@ -86,9 +85,6 @@ class sceneCreator(object):
                     posY = posOnSphere.getMatrixData()[0][1]
                     posZ = posOnSphere.getMatrixData()[0][2]
 
-
-#                    posOnSphere.showMe('pos on sphere')
-                    
                     eyeX = rayOrigin.getMatrixData()[0][0]
                     eyeY = rayOrigin.getMatrixData()[0][1]
                     eyeZ = rayOrigin.getMatrixData()[0][2]
@@ -100,18 +96,11 @@ class sceneCreator(object):
                     tPoint = posOnSphere
                     tEyeVector = rayOrigin.subtractAnotherFromMe(posOnSphere)
 
-#                    tEyeVector.showMe()
-                    
-
                     tNormalVector = surfaceNormal
 
-#                    tNormalVector.showMe('surface normal')
-                    
                     aLighting = rtLighting(tMaterial, tLightPoint, tPoint, tEyeVector, tNormalVector)
                     pixelColour = aLighting.getColour()['colour']
 
-#                    print ('pixelColour %s ' % str(pixelColour))
-                    
                     tColour = cl.rtColour(pixelColour[0], pixelColour[1], pixelColour[2])
                     try:
                         # Adjust the y component to allow for the reversed coordinate system in the ppm file format
@@ -129,7 +118,7 @@ if __name__== "__main__":
 
     aSceneCreator = sceneCreator()
     aSceneCreator.runIt()
-#    cProfile.run ('aSceneCreator.runIt()')
+    # cProfile.run ('aSceneCreator.runIt()')
 
     
 

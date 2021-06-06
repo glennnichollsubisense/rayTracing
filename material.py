@@ -17,7 +17,7 @@ class rtMaterial(object):
         self.sSpecular = 0.9
         if pSpecular != None:
             self.sSpecular = pSpecular
-        self.sShininess = 200
+        self.sShininess = 200.0
         if pShininess != None:
             self.sShininess = pShininess
             
@@ -65,5 +65,19 @@ class rtMaterial(object):
         self.sDiffuse = 0.9
         self.sAmbient = 0.1
         self.sSpecular = 0.9
-        self.sShininess = 200
-    
+        self.sShininess = 10
+
+    def setTextBookPurple(self):
+
+        rtf = rtColourFactory()
+        self.sColour = rtColour(1.0, 0.2, 1.0)
+        self.sDiffuse = 0.9
+        self.sAmbient = 0.1
+        self.sSpecular = 0.9
+        self.sShininess = 10
+
+    def showMe(self, label=''):
+        if len(label) > 0:
+            print ('**** %s ****' % label)
+        print ('Diffuse: %s, Ambient: %s, Specular: %s, Shininess: %s' % (str(self.sDiffuse), str(self.sAmbient), str(self.sSpecular), str(self.sShininess)))
+        self.sColour.showMe('material colour')
