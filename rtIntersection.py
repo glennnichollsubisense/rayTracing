@@ -65,14 +65,17 @@ class rtIntersectionSet(object):
         
     def showMe(self):
         print ('rtIntersectionSet: %s ' % str(self.noOfIntersections()))
+        for i in self.intersectionSet():
+            i.showMe()
 
     def hit(self):
 
+        # i had this as integers initially but that cannot be right
         interID = None
-        interTValue = 1000000000
+        interTValue = 1000000000.0
         for iInter in self.sIntersections:
-            if (int(iInter.tValue()) < interTValue) and (int(iInter.tValue())>0):
-                interTValue = int(iInter.tValue())
+            if (float(iInter.tValue()) < float(interTValue)) and (float(iInter.tValue())>0.0):
+                interTValue = float(iInter.tValue())
                 interID = iInter.intersectionID()
 
         return {'hit': interID, 'tvalue': interTValue}

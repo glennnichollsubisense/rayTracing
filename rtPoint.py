@@ -99,6 +99,15 @@ class rtPoint(object):
     def showMe(self, txtPrefix=''):
         print ('%s *** Point ***' % txtPrefix)
         self.matrix.showMe()
+
+
+    def asDictionary(self):
+
+        res = {'Point': []}
+        res['Point'].append (self.matrix.getValue(0,0))
+        res['Point'].append (self.matrix.getValue(0,1))
+        res['Point'].append (self.matrix.getValue(0,2))
+        return res
         
 ## Exceptions
     

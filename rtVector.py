@@ -147,6 +147,16 @@ class rtVector(object):
         print ('%s *** Vector ***' % label) 
         print ('%s : %s : %s' % (self.matrix.getValue(0,0), self.matrix.getValue(0, 1), self.matrix.getValue(0, 2)))
 
+
+    def asDictionary(self):
+
+        res = {'Vector': []}
+        res['Vector'].append (self.matrix.getValue(0,0))
+        res['Vector'].append (self.matrix.getValue(0,1))
+        res['Vector'].append (self.matrix.getValue(0,2))
+        return res
+
+
     # Exceptions
     class badSubtraction(Exception):    
         def __init__(self, message):

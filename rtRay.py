@@ -3,6 +3,8 @@ import math
 import rtVector
 import rtPoint
 import rtSphere
+import rtWorld
+import rtIntersection
 
 class rtRay(object):
 
@@ -61,13 +63,65 @@ class rtRay(object):
             # No intersection
             return ()
 
-        # figure out the 2 versions of t that intersect the sphere
+        # figure out the 2 values of t that intersect the sphere
         t1 = ((b * -1) - math.sqrt(discriminant)) / (2 * a)
         t2 = ((b * -1) + math.sqrt(discriminant)) / (2 * a)
 
         return (t1, t2)
 
+    def detailedIntersectionWithShape (self, pShape, pTValue):
 
+        # Returns a whole pile of information about the intersection
+        # Just works for spheres at the moment but will be expanded to include other shapes
+
+        res = {}
+        interSet = rtIntersection.rtIntersectionSet()
+        intersections = self.intersectionsWithSphere (pShape)
+
+        if len(intersections)==0:
+            return res
+        
+        for iInter in intersections:
+            interSet.addIntersection (rtIntersection.rtIntersection(iInter))
+
+        res['t'] = interSet.hit()
+        res['object'] = pShape
+
+        posOnSphere = self.position(res['t']['tvalue'])
+        res['point'] = posOnSphere
+        res['eyev'] = self.direction()
+
+        posX = posOnSphere.getMatrixData()[0][0]
+        posY = posOnSphere.getMatrixData()[0][1]
+        posZ = posOnSphere.getMatrixData()[0][2]
+        
+        res['normalv'] = pShape.normalAtWorldPoint (posX, posY, posZ).normalise()
+
+        # figure out if the normal vector is pointing away from us
+        # this happens when the eye is inside a shape
+        
+        # The book says the vector is inside if the dot product < 0.0
+        # but that cannot be right.  If the dot product is < 0.0 it means the vectors
+        # are pointing in different directions, which is  the case if the eye vector is outside the shape
+        # if the eye vector is inside the shape the normal vector points in the same direction, so the
+        # dot product is > 0
+        res['inside'] = False
+        if float(res['normalv'].dotProductWithAnother(res['eyev'])) > 0.0:
+            res['inside'] = True
+            res['normalv'] = res['normalv'].negate()
+            
+        return res
+        
+
+    def intersectionsWithWorld (self, pWorld):
+
+        intersections = []
+        for iobject in pWorld.getObjects():
+            intersections.extend (self.intersectionsWithSphere(iobject))
+
+        intersections.sort()
+        return intersections
+    
     def generalTransform (self, transform):
         newOrigin = self.sOrigin.generalTransform(transform)        
         newDirection = self.sDirection.generalTransform(transform)
@@ -81,11 +135,13 @@ class rtRay(object):
     
     def scale(self, scaling):
         return self.generalTransform(scaling)
-
     
 
-    def showMe(self):
-        print ('*** Ray ***')
+    def showMe(self, name=None):
+
+        if name==None:
+            name=''            
+        print ('*** Ray %s ***' % name)
         print ('origin')
         self.sOrigin.showMe()
         print ('direction')

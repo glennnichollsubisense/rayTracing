@@ -98,3 +98,13 @@ class rtSphere(object):
         self.sTransform.showMe('Transform')
         self.sMaterial.showMe('Material')
         
+
+    def asDictionary(self):
+
+        res = {'Sphere': {}}
+        res['Sphere']['origin'] = self.origin().asDictionary()
+        res['Sphere']['radius'] = self.radius()
+        res['Sphere']['id'] = self.sObjectID
+        return res
+
+        

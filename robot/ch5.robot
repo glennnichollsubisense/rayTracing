@@ -3,9 +3,116 @@
 | Library | Collections
 | Library | json
 
-
 *** Test Cases ***
+| Test 1 - Test the basic construction and query
+| | ${result}= | run process | python | ./rayTester.py | testQuery | [1, 2, 3] | [4, 5, 6]
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resultOrigin}= | Get From Dictionary | ${json} | origin
+| | ${resultX}= | Collections.Get From List | ${resultOrigin} | 0
+| | Should be equal as numbers | ${resultX} | 1.0
+| | ${resultY}= | Collections.Get From List | ${resultOrigin} | 1
+| | Should be equal as numbers | ${resultY} | 2.0
+| | ${resultZ}= | Collections.Get From List | ${resultOrigin} | 2
+| | Should be equal as numbers | ${resultZ} | 3.0
+| | ${resultDirection}= | Get From Dictionary | ${json} | direction
+| | ${resultX}= | Collections.Get From List | ${resultDirection} | 0
+| | Should be equal as numbers | ${resultX} | 4.0
+| | ${resultY}= | Collections.Get From List | ${resultDirection} | 1
+| | Should be equal as numbers | ${resultY} | 5.0
+| | ${resultZ}= | Collections.Get From List | ${resultDirection} | 2
+| | Should be equal as numbers | ${resultZ} | 6.0
 
+| Test 2a - Test the position r(0)
+| | ${result}= | run process | python | ./rayTester.py | testPosition | [2, 3, 4] | [1, 0, 0] | 0
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resultOrigin}= | Get From Dictionary | ${json} | tpoint
+| | ${resultX}= | Collections.Get From List | ${resultOrigin} | 0
+| | Should be equal as numbers | ${resultX} | 2.0
+| | ${resultY}= | Collections.Get From List | ${resultOrigin} | 1
+| | Should be equal as numbers | ${resultY} | 3.0
+| | ${resultZ}= | Collections.Get From List | ${resultOrigin} | 2
+| | Should be equal as numbers | ${resultZ} | 4.0
+
+| Test 2b - Test the position r(1)
+| | ${result}= | run process | python | ./rayTester.py | testPosition | [2, 3, 4] | [1, 0, 0] | 1
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resultOrigin}= | Get From Dictionary | ${json} | tpoint
+| | ${resultX}= | Collections.Get From List | ${resultOrigin} | 0
+| | Should be equal as numbers | ${resultX} | 3.0
+| | ${resultY}= | Collections.Get From List | ${resultOrigin} | 1
+| | Should be equal as numbers | ${resultY} | 3.0
+| | ${resultZ}= | Collections.Get From List | ${resultOrigin} | 2
+| | Should be equal as numbers | ${resultZ} | 4.0
+
+| Test 2c - Test the position r(-1)
+| | ${result}= | run process | python | ./rayTester.py | testPosition | [2, 3, 4] | [1, 0, 0] | -1
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resultOrigin}= | Get From Dictionary | ${json} | tpoint
+| | ${resultX}= | Collections.Get From List | ${resultOrigin} | 0
+| | Should be equal as numbers | ${resultX} | 1.0
+| | ${resultY}= | Collections.Get From List | ${resultOrigin} | 1
+| | Should be equal as numbers | ${resultY} | 3.0
+| | ${resultZ}= | Collections.Get From List | ${resultOrigin} | 2
+| | Should be equal as numbers | ${resultZ} | 4.0
+
+| Test 2d - Test the position r(2.5)
+| | ${result}= | run process | python | ./rayTester.py | testPosition | [2, 3, 4] | [1, 0, 0] | 2.5
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resultOrigin}= | Get From Dictionary | ${json} | tpoint
+| | ${resultX}= | Collections.Get From List | ${resultOrigin} | 0
+| | Should be equal as numbers | ${resultX} | 4.5
+| | ${resultY}= | Collections.Get From List | ${resultOrigin} | 1
+| | Should be equal as numbers | ${resultY} | 3.0
+| | ${resultZ}= | Collections.Get From List | ${resultOrigin} | 2
+| | Should be equal as numbers | ${resultZ} | 4.0
+
+| Test 3 - Test the detailed computations we get back from interacting with a sphere
+| | ${result}= | run process | python | ./rayTester.py | testComputations | [0, 0, -5] | [0, 0, 1] | 4
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${respoint}= | Get From Dictionary | ${json} | point
+| | ${resnormalv}= | Get From Dictionary | ${json} | normalv
+| | ${resobject}= | Get From Dictionary | ${json} | object
+| | ${restvalue}= | Get From Dictionary | ${json} | t
+| | ${reseyev}= | Get From Dictionary | ${json} | eyev
+| | ${pointelement}= | Get From Dictionary | ${respoint} | Point
+| | ${pointelementX}= | Get From List | ${pointelement} | 0
+| | ${pointelementY}= | Get From List | ${pointelement} | 1
+| | ${pointelementZ}= | Get From List | ${pointelement} | 2
+| | Should be equal as numbers | ${pointelementX} | 0.0
+| | Should be equal as numbers | ${pointelementY} | 0.0
+| | Should be equal as numbers | ${pointelementZ} | -1.0
+| | ${eyeelement}= | Get From Dictionary | ${reseyev} | Vector
+| | ${eyeelementX}= | Get From List | ${eyeelement} | 0
+| | ${eyeelementY}= | Get From List | ${eyeelement} | 1
+| | ${eyeelementZ}= | Get From List | ${eyeelement} | 2
+| | Should be equal as numbers | ${eyeelementX} | 0.0
+| | Should be equal as numbers | ${eyeelementY} | 0.0
+| | Should be equal as numbers | ${eyeelementZ} | 1.0
+| | ${normalelement}= | Get From Dictionary | ${resnormalv} | Vector
+| | ${normalelementX}= | Get From List | ${normalelement} | 0
+| | ${normalelementY}= | Get From List | ${normalelement} | 1
+| | ${normalelementZ}= | Get From List | ${normalelement} | 2
+| | Should be equal as numbers | ${normalelementX} | 0.0
+| | Should be equal as numbers | ${normalelementY} | 0.0
+| | Should be equal as numbers | ${normalelementZ} | -1.0
+| | ${objectelement}= | Get From Dictionary | ${resobject} | Sphere
+| | ${sphereid}= | Get From Dictionary | ${objectelement} | id
+| | Should be equal as strings | ${sphereid} | Billy
+| | ${tvalue}= | Get From Dictionary | ${restvalue} | tvalue
+| | Should be equal as numbers | ${tvalue} | 4
+
+
+| Test 4 - Test the detailed computations showing as being outside the sphere
+| | ${result}= | run process | python | ./rayTester.py | testComputationsInsideOutside | [0, 0, -5] | [0, 0, 1] | 4
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resinside}= | Get From Dictionary | ${json} | inside
+| | Should be equal as strings | ${resinside} | False
+
+| Test 5 - Test the detailed computations showing as being inside the sphere
+| | ${result}= | run process | python | ./rayTester.py | testComputationsInsideOutside | [0, 0, 0] | [0, 0, 1] | 4
+| | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
+| | ${resinside}= | Get From Dictionary | ${json} | inside
+| | Should be equal as strings | ${resinside} | True
 
 | Test the intersect where the ray is in front of the sphere
 | | ${result}= | run process | python | ./rayIntersectionTester.py | testIntersect1 | [0, 0, -5] | [0, 0, 1] | unitSphere
@@ -263,5 +370,3 @@
 | | Should be equal as numbers | ${x} | 0
 | | Should be equal as numbers | ${y} | 0.970143
 | | Should be equal as numbers | ${z} | -0.242536
-
-

@@ -1,4 +1,5 @@
 from rtPoint import rtPoint
+from rtVector import rtVector
 from rtSphere import rtSphere
 from pointLightSource import PointLightSource
 
@@ -13,8 +14,17 @@ class rtWorld(object):
         self.sObjects=[]
         self.sLightSources=[]
 
+        ptFrom = rtPoint(0, 0, 0)
+        ptTo = rtPoint(0, 0, -1)
+        vcUp = rtVector (0, 1, 0)
+
     def getObjects(self):
         return self.sObjects
+
+    def getObjectByName(self, pName):
+        for i in self.sObjects:
+            if i.sObjectID == pName:
+                return i
 
     def addObject(self, aObject):
         self.sObjects.append(aObject)

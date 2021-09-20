@@ -4,7 +4,7 @@
 | Library | json
 
 *** Test Cases ***
-| Test the basic construction and queries of a world
+| Test the basic construction and queries of a world - ch7 Test1
 | | ${result}= | run process | python | ./worldTester.py | testEmptyWorld
 | | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
 | | ${resultObjects}= | Get From Dictionary | ${json} | objects
@@ -14,7 +14,7 @@
 | | ${noofLightSources}= | Get Length | ${resultLightSources}
 | | Should Be Equal as Integers | ${noofLightSources} | 0
 
-| Test a workd with two spheres and a single light source
+| Test a world with two spheres and a single light source - ch7 Test 2
 | | ${result}= | run process | python | ./worldTester.py | testTwoSpheres
 | | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
 | | ${noofObjects}= | Get From Dictionary | ${json} | noofobjects
@@ -22,7 +22,7 @@
 | | ${noofLightSources}= | Get From Dictionary | ${json} | nooflightsources
 | | Should Be Equal as Integers | ${noofLightSources} | 1
 
-| Test interaction with a ray and a world with two spheres and a single light source
+| Test interaction with a ray and a world with two spheres and a single light source - ch7 Test 3
 | | ${result}= | run process | python | ./worldTester.py | testTwoSpheresAndRay
 | | ${json}= | evaluate | json.loads('''${result.stdout}''') | json
 | | ${intersections}= | Get From Dictionary | ${json} | intersections

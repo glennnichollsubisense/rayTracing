@@ -48,7 +48,7 @@ class rtLighting(object):
                     specular = specular.multiplyByScalar(factor)
             except Exception:
                 print ('Exception went off in rtLighting.getColour()')
-                specular = rtf.newWhite()
+                specular = rtf.newRed()
 
         colour = ambient.addB(diffuse)
         colour = colour.addB(specular)
